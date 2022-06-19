@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="water-common" />
+        <module name="water-support" />
+        <module name="water-service-api-impl" />
+        <module name="water-web" />
+        <module name="water-service-api" />
+        <module name="water-handler" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common" target="11" />
+      <module name="handler" target="11" />
+      <module name="service-api" target="11" />
+      <module name="service-api-imp" target="11" />
+      <module name="support" target="11" />
+      <module name="web" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
+      <module name="handler" options="-parameters" />
+      <module name="service-api" options="-parameters" />
+      <module name="service-api-imp" options="-parameters" />
+      <module name="support" options="-parameters" />
+      <module name="water-common" options="-parameters" />
+      <module name="water-handler" options="-parameters" />
+      <module name="water-service-api" options="-parameters" />
+      <module name="water-service-api-impl" options="-parameters" />
+      <module name="water-support" options="-parameters" />
+      <module name="water-web" options="-parameters" />
+      <module name="web" options="-parameters" />
+    </option>
+  </component>
+</project>
