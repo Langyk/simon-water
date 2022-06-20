@@ -1,9 +1,13 @@
 package com.simon.water.handler.script;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Throwables;
+import com.simon.water.common.enums.SmsStatus;
 import com.simon.water.common.pojo.SmsParam;
+import com.simon.water.domain.SmsRecord;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -11,10 +15,15 @@ import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.SmsClient;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
+import com.tencentcloudapi.sms.v20210111.models.SendStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -25,7 +34,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class TencentSmsScript {
+public class TencentSmsScript implements SmsScript {
 
     @Autowired
 
@@ -34,6 +43,7 @@ public class TencentSmsScript {
      */
     private static final String URL = "sms.tencentcloudapi.com";
     private static final String REGION = "ap-guangzhou";
+    private static final Integer PHONE_NUM = 11;
 
 
     /**
@@ -55,45 +65,22 @@ public class TencentSmsScript {
     private String SIGN_NAME;
 
 
-    public String send(SmsParam smsParam) {
+    @Override
+    public List<SmsRecord> send(SmsParam smsParam) {
         try {
 
-            /**
-             * 初始化 client
-             */
-            /* 必要步骤：
-             * 实例化一个认证对象，入参需要传入腾讯云账户密钥对secretId，secretKey。
-             * 这里采用的是从环境变量读取的方式，需要在环境变量中先设置这两个值。
-             * 你也可以直接在代码中写死密钥对，但是小心不要将代码复制、上传或者分享给他人，
-             * 以免泄露密钥对危及你的财产安全。
-             * SecretId、SecretKey 查询: https://console.cloud.tencent.com/cam/capi */
-            Credential cred = new Credential(SECRET_ID, SECRET_KEY);
-            // 实例化一个http选项，可选，没有特殊需求可以跳过
-            HttpProfile httpProfile = new HttpProfile();
-            /* 指定接入地域域名，默认就近地域接入域名为 sms.tencentcloudapi.com ，也支持指定地域域名访问，例如广州地域的域名为 sms.ap-guangzhou.tencentcloudapi.com */
-            httpProfile.setEndpoint(URL);
-            ClientProfile clientProfile = new ClientProfile();
-            clientProfile.setHttpProfile(httpProfile);
-            SmsClient client = new SmsClient(cred, REGION, clientProfile);
 
-            /**
-             * 组装发送短信参数
-             */
-            SendSmsRequest req = new SendSmsRequest();
-            String[] phoneNumberSet1 = smsParam.getPhones().toArray(new String[smsParam.getPhones().size() - 1]);
-            req.setPhoneNumberSet(phoneNumberSet1);
-            req.setSmsSdkAppId(SMS_SDK_APP_ID);
-            req.setSignName(SIGN_NAME);
-            req.setTemplateId(TEMPLATE_ID);
-            String[] templateParamSet1 = {"5577"};
-            req.setTemplateParamSet(templateParamSet1);
-            req.setSessionContext(IdUtil.fastSimpleUUID());
+            // 1. 初始化 client
+            SmsClient client = init();
 
-            /**
-             * 请求，返回结果
-             */
-            SendSmsResponse resp = client.SendSms(req);
-            return SendSmsResponse.toJsonString(resp);
+            // 2. 组装请求参数
+            SendSmsRequest request = assembleReq(smsParam);
+
+            // 3. 发送请求
+            SendSmsResponse response = client.SendSms(request);
+
+            // 4. 获取短信回执
+            return assembleSmsRecord(smsParam, response);
 
         } catch (TencentCloudSDKException e) {
             log.error("send tencent sms fail!{},params:{}",
@@ -101,6 +88,87 @@ public class TencentSmsScript {
             return null;
         }
 
+    }
+
+    private List<SmsRecord> assembleSmsRecord(SmsParam smsParam, SendSmsResponse response) {
+        if (response == null || ArrayUtil.isEmpty(response.getSendStatusSet())) {
+            return null;
+        }
+
+        List<SmsRecord> smsRecordList = new ArrayList<>();
+
+        for (SendStatus sendStatus : response.getSendStatusSet()) {
+            String phone = new StringBuilder(new StringBuilder(sendStatus.getPhoneNumber())
+                    .reverse().substring(0, PHONE_NUM)).reverse().toString();
+
+            /**
+             * {
+             *   "Response": {
+             *     "RequestId": "d1eedfe7-e3ef-495f-9be5-f92300914fb1",
+             *     "SendStatusSet": [
+             *       {
+             *         "Code": "Ok",
+             *         "Fee": 1,
+             *         "IsoCode": "CN",
+             *         "Message": "send success",
+             *         "PhoneNumber": "+8619802110062",
+             *         "SerialNo": "2645:347560053616557347421191006",
+             *         "SessionContext": ""
+             *       }
+             *     ]
+             *   }
+             * }
+             */
+            SmsRecord smsRecord = SmsRecord.builder()
+                    .sendDate(Integer.valueOf(DateUtil.format(new Date(), "yyyyMMdd")))
+                    .messageTemplateId(smsParam.getMessageTemplateId())
+                    .phone(Long.valueOf(phone))
+                    .supplierId(smsParam.getSupplierId())
+                    .supplierName(smsParam.getSupplierName())
+                    .seriesId(sendStatus.getSerialNo())
+                    .chargingNum(Math.toIntExact(sendStatus.getFee()))
+                    .status(SmsStatus.SEND_SUCCESS.getCode())
+                    .reportContent(sendStatus.getCode())
+                    .created(Math.toIntExact(DateUtil.currentSeconds()))
+                    .updated(Math.toIntExact(DateUtil.currentSeconds()))
+                    .build();
+
+            smsRecordList.add(smsRecord);
+        }
+        return smsRecordList;
+    }
+
+    /**
+     * 组装发送短信参数
+     */
+    private SendSmsRequest assembleReq(SmsParam smsParam) {
+        SendSmsRequest req = new SendSmsRequest();
+        String[] phoneNumberSet1 = smsParam.getPhones().toArray(new String[smsParam.getPhones().size() - 1]);
+        req.setPhoneNumberSet(phoneNumberSet1);
+        req.setSmsSdkAppId(SMS_SDK_APP_ID);
+        req.setSignName(SIGN_NAME);
+        req.setTemplateId(TEMPLATE_ID);
+        String[] templateParamSet1 = {smsParam.getContent()};
+        req.setTemplateParamSet(templateParamSet1);
+        req.setSessionContext(IdUtil.fastSimpleUUID());
+        return req;
+    }
+
+    /**
+     * 初始化 client
+     */
+    private SmsClient init() {
+        // 1. 实例化一个对象cred
+        Credential cred = new Credential(SECRET_ID, SECRET_KEY);
+        // 2. 实例化一个http选项
+        HttpProfile httpProfile = new HttpProfile();
+        httpProfile.setEndpoint(URL);
+        // 3. 实例化一个client选项
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setHttpProfile(httpProfile);
+        // 4. 实例化一个要请求产品的client对象
+        SmsClient client = new SmsClient(cred, REGION, clientProfile);
+        return client;
     }
 }
 
