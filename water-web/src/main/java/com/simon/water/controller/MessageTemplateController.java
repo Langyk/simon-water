@@ -2,11 +2,13 @@ package com.simon.water.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.simon.water.dao.MessageTemplateDao;
 import com.simon.water.domain.MessageTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * creat by 郎亚坤
@@ -48,10 +50,9 @@ public class MessageTemplateController {
                 .deduplicationTime(1)
                 .isNightShield(0)
                 .build();
+        Integer result = messageTemplateDao.insert(messageTemplate);
 
-        MessageTemplate info = messageTemplateDao.save(messageTemplate);
-
-        return JSON.toJSONString(info);
+        return JSON.toJSONString(result);
     }
 
     /**
@@ -59,7 +60,9 @@ public class MessageTemplateController {
      */
     @GetMapping("/query")
     public String query() {
-        Iterable<MessageTemplate> all = messageTemplateDao.findAll();
+        LambdaQueryWrapper<MessageTemplate> lambdaQueryWrapper = new LambdaQueryWrapper<MessageTemplate>();
+
+        Iterable<MessageTemplate> all = messageTemplateDao.selectList(lambdaQueryWrapper);
         for (MessageTemplate messageTemplate : all) {
             return JSON.toJSONString(messageTemplate);
         }

@@ -1,15 +1,15 @@
 package com.simon.water.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.simon.water.domain.SmsRecord;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * creat by 郎亚坤
  * 2022/6/20 20:11
  */
 
-@Repository
-public interface SmsRecordDao extends CrudRepository<SmsRecord, Long> {
-}
 
+@Mapper
+public interface SmsRecordDao extends BaseMapper<SmsRecord> {
+}

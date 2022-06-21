@@ -1,3 +1,5 @@
+
+DROP TABLE IF EXISTS `message_template`;
 CREATE TABLE `message_template`
 (
     `id`                 bigint(20)                              NOT NULL AUTO_INCREMENT,

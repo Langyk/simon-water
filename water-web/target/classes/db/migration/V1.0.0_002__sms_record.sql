@@ -1,3 +1,5 @@
+
+DROP TABLE IF EXISTS `sms_record`;
 CREATE TABLE `sms_record`
 (
     `id`                  bigint(20)                              NOT NULL AUTO_INCREMENT,
@@ -18,4 +20,4 @@ CREATE TABLE `sms_record`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='短信记录信息');
+  COLLATE = utf8mb4_unicode_ci COMMENT ='短信记录信息';

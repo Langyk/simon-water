@@ -8,6 +8,7 @@ import com.simon.water.domain.SmsRecord;
 import com.simon.water.handler.script.SmsScript;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class SmsHandler implements Handler {
     private SmsScript smsScript;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean doHandler(TaskInfo taskInfo) {
         SmsParam smsParam = SmsParam.builder()
                 .phones(taskInfo.getReceiver())
@@ -36,10 +38,11 @@ public class SmsHandler implements Handler {
 
         List<SmsRecord> recordList = smsScript.send(smsParam);
 
-        if(CollUtil.isNotEmpty(recordList)){
-            smsRecordDao.saveAll(recordList);
+        if (CollUtil.isNotEmpty(recordList)) {
+            recordList.forEach(singleRecord -> {
+                smsRecordDao.insert(singleRecord);
+            });
             return true;
-
         }
         return false;
     }

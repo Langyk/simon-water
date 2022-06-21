@@ -1,9 +1,9 @@
 package com.simon.water.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.simon.water.domain.MessageTemplate;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
-@Repository
-public interface MessageTemplateDao extends CrudRepository<MessageTemplate,Long> {
+@Mapper
+public interface MessageTemplateDao extends BaseMapper<MessageTemplate> {
 }
