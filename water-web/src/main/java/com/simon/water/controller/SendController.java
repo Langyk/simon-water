@@ -1,6 +1,7 @@
 package com.simon.water.controller;
 
 import com.simon.water.common.pojo.TaskInfo;
+import com.simon.water.common.pojo.vo.BasicResultVO;
 import com.simon.water.handler.handler.SmsHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +27,20 @@ public class SendController {
      * @return
      */
     @GetMapping("/sendSms")
-    public boolean sendSms(String phone,String content,Long messageTemplateId ) {
+    public BasicResultVO sendSms(String phone,String content,Long messageTemplateId ) {
 
         TaskInfo taskInfo = TaskInfo.builder()
                 .receiver(new HashSet<>(Arrays.asList(phone)))
                 .content(content)
                 .messageTemplateId(messageTemplateId).build();
 
-        return smsHandler.doHandler(taskInfo);
+        if(smsHandler.doHandler(taskInfo)){
+
+            return BasicResultVO.success("信息发送成功");
+        }
+
+        return BasicResultVO.fail("信息发送失败");
+
 
 
     }
