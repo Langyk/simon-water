@@ -49,6 +49,13 @@
             <artifactId>commons-collections4</artifactId>
             <version>4.4</version>
         </dependency>
+
+        <!--引入Kafka-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.simon.water</groupId>
             <artifactId>handler</artifactId>

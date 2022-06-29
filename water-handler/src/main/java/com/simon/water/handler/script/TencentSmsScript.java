@@ -90,6 +90,7 @@ public class TencentSmsScript implements SmsScript {
 
     }
 
+
     private List<SmsRecord> assembleSmsRecord(SmsParam smsParam, SendSmsResponse response) {
         if (response == null || ArrayUtil.isEmpty(response.getSendStatusSet())) {
             return null;

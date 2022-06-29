@@ -32,3 +32,15 @@ spring:
     baseline-version: 1.0.0
     encoding: UTF-8
     locations: classpath:db/migration
+
+# Kafka的配置
+  kafka:
+    bootstrap-servers: 124.221.77.104:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      group-id: simon-test
