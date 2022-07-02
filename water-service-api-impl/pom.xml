@@ -18,7 +18,15 @@
             <artifactId>water-service-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.simon.water</groupId>
+            <artifactId>water-support</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
+
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

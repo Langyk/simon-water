@@ -19,16 +19,16 @@ import java.util.Optional;
 public class UserLogConsumer {
 
 
-    @KafkaListener(topics = {"austin"},groupId = "simon-test")
-    public void consumer(ConsumerRecord<?,?> consumerRecord){
-        // 判断是否为null
-        Optional<?> kafkaMessage = Optional.ofNullable(consumerRecord.value());
-        log.info(">>>>>>>>>> record =" + kafkaMessage);
-        if(kafkaMessage.isPresent()){
-            //得到Optional实例中的值
-            Object message = kafkaMessage.get();
-            System.err.println("消费消息:"+message);
-        }
-    }
+//    @KafkaListener(topics = {"austin"},groupId = "simon-test")
+//    public void consumer(ConsumerRecord<?,?> consumerRecord){
+//        // 判断是否为null
+//        Optional<?> kafkaMessage = Optional.ofNullable(consumerRecord.value());
+//        log.info(">>>>>>>>>> record =" + kafkaMessage);
+//        if(kafkaMessage.isPresent()){
+//            //得到Optional实例中的值
+//            Object message = kafkaMessage.get();
+//            System.err.println("消费消息:"+message);
+//        }
+//    }
 }
 

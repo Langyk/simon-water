@@ -1,6 +1,6 @@
 package com.simon.water.handler.handler;
 
-import com.simon.water.common.pojo.TaskInfo;
+import com.simon.water.common.domain.TaskInfo;
 
 /**
  * creat by 郎亚坤

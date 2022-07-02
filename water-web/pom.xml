@@ -29,6 +29,28 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!--引入common模块-->
+        <dependency>
+            <groupId>com.simon.water</groupId>
+            <artifactId>handler</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--引入api模块-->
+        <dependency>
+            <groupId>com.simon.water</groupId>
+            <artifactId>water-service-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!--引入api-impl模块-->
+        <dependency>
+            <groupId>com.simon.water</groupId>
+            <artifactId>water-service-api-impl</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!--hutool工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -56,11 +78,6 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.simon.water</groupId>
-            <artifactId>handler</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
+
 </project>

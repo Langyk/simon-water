@@ -46,6 +46,16 @@ public class MessageTemplate {
     private Integer msgStatus;
 
     /**
+     * 定时任务Id(由xxl-job返回)
+     */
+    private Integer cronTaskId;
+
+    /**
+     * 定时发送的人群的文件路径
+     */
+    private String cronCrowdPath;
+
+    /**
      * 发送的Id类型
      * 消息的发送ID类型：10. userId 20.did 30.手机号 40.openId 50.email
      */
@@ -68,6 +78,11 @@ public class MessageTemplate {
      * 10.通知类消息 20.营销类消息 30.验证码类消息
      */
     private Integer msgType;
+
+    /**
+     * 屏蔽类型
+     */
+    private Integer shieldType;
 
     /**
      * 推送消息的时间
@@ -127,17 +142,6 @@ public class MessageTemplate {
      */
     private Integer updated;
 
-    /**
-     * 消息去重时间 单位小时
-     */
-    private Integer deduplicationTime;
-
-    /**
-     * 是否夜间屏蔽
-     * 0:不屏蔽
-     * 1：屏蔽
-     */
-    private Integer isNightShield;
 
 }
 

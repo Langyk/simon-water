@@ -1,6 +1,6 @@
 package com.simon.water.handler.script;
 
-import com.simon.water.common.pojo.SmsParam;
+import com.simon.water.handler.domain.SmsParam;
 import com.simon.water.domain.SmsRecord;
 import org.springframework.stereotype.Component;
 

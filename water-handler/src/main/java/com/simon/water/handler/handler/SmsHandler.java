@@ -1,8 +1,10 @@
 package com.simon.water.handler.handler;
 
 import cn.hutool.core.collection.CollUtil;
-import com.simon.water.common.pojo.SmsParam;
-import com.simon.water.common.pojo.TaskInfo;
+import cn.hutool.core.util.StrUtil;
+import com.simon.water.common.dto.model.SmsContentModel;
+import com.simon.water.handler.domain.SmsParam;
+import com.simon.water.common.domain.TaskInfo;
 import com.simon.water.dao.SmsRecordDao;
 import com.simon.water.domain.SmsRecord;
 import com.simon.water.handler.script.SmsScript;
@@ -29,9 +31,17 @@ public class SmsHandler implements Handler {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean doHandler(TaskInfo taskInfo) {
+        SmsContentModel smsContentModel = (SmsContentModel) taskInfo.getContentModel();
+        String resultContent;
+        if (StrUtil.isNotBlank(smsContentModel.getUrl())) {
+            resultContent = smsContentModel.getContent() + " " + smsContentModel.getUrl();
+        } else {
+            resultContent = smsContentModel.getContent();
+        }
+
         SmsParam smsParam = SmsParam.builder()
                 .phones(taskInfo.getReceiver())
-                .content(taskInfo.getContent())
+                .content(resultContent)
                 .messageTemplateId(taskInfo.getMessageTemplateId())
                 .supplierId(10) // ChannelType
                 .supplierName("腾讯云通知类消息渠道").build();

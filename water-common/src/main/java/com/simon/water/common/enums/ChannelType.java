@@ -5,40 +5,81 @@ package com.simon.water.common.enums;
  * 2022/6/19 22:33
  */
 
+import com.simon.water.common.dto.model.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * 发送渠道类型枚举
  */
+@Getter
+@ToString
+@AllArgsConstructor
 public enum ChannelType {
 
-    IM(10,"IM(站内信)"),
-    PUSH(20,"PUSH(通知栏)"),
-    SMS(30,"SMS(短信)"),
-    EMAIL(40,"EMAIL(邮件)"),
-    OFFICIAL_ACCOUNT(50,"officialAccounts(服务号)"),
-    MINI_PROGRAM(60,"miniProgram(小程序)");
 
+    IM(10, "IM(站内信)", ImContentModel.class, "im"),
+    PUSH(20, "push(通知栏)", PushContentModel.class, "push"),
+    SMS(30, "sms(短信)", SmsContentModel.class, "sms"),
+    EMAIL(40, "email(邮件)", EmailContentModel.class, "email"),
+    OFFICIAL_ACCOUNT(50, "OfficialAccounts(服务号)", OfficialAccountsContentModel.class, "official_accounts"),
+    MINI_PROGRAM(60, "miniProgram(小程序)", MiniProgramContentModel.class, "mini_program"),
+    ENTERPRISE_WE_CHAT(70, "EnterpriseWeChat(企业微信)", EnterpriseWeChatContentModel.class, "enterprise_we_chat"),
+    DING_DING_ROBOT(80, "dingDingRobot(钉钉机器人)", DingDingRobotContentModel.class, "ding_ding_robot"),
+    DING_DING_WORK_NOTICE(90, "dingDingWorkNotice(钉钉工作通知)", DingDingWorkContentModel.class, "ding_ding_work_notice"),
+    ;
+
+    /**
+     * 编码值
+     */
     private Integer code;
+
+    /**
+     * 描述
+     */
     private String description;
 
-    ChannelType(Integer code, String description){
-        this.code = code;
-        this.description = description;
+    /**
+     * 内容模型Class
+     */
+    private Class contentModelClass;
+
+    /**
+     * 英文标识
+     */
+    private String codeEn;
+
+
+    /**
+     * 通过code获取class
+     * @param code
+     * @return
+     */
+    public static Class getChanelModelClassByCode(Integer code) {
+        ChannelType[] values = values();
+        for (ChannelType value : values) {
+            if (value.getCode().equals(code)) {
+                return value.getContentModelClass();
+            }
+        }
+        return null;
     }
 
-    public Integer getCode() {
-        return code;
+    /**
+     * 通过code获取enum
+     * @param code
+     * @return
+     */
+    public static ChannelType getEnumByCode(Integer code) {
+        ChannelType[] values = values();
+        for (ChannelType value : values) {
+            if (value.getCode().equals(code)) {
+                return value;
+            }
+        }
+        return null;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
 

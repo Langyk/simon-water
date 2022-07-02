@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Throwables;
 import com.simon.water.common.enums.SmsStatus;
-import com.simon.water.common.pojo.SmsParam;
+import com.simon.water.handler.domain.SmsParam;
 import com.simon.water.domain.SmsRecord;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -82,7 +82,7 @@ public class TencentSmsScript implements SmsScript {
             // 4. 获取短信回执
             return assembleSmsRecord(smsParam, response);
 
-        } catch (TencentCloudSDKException e) {
+        } catch (Exception e) {
             log.error("send tencent sms fail!{},params:{}",
                     Throwables.getStackTraceAsString(e), JSON.toJSONString(smsParam));
             return null;
