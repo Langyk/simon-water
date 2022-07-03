@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 短信状态信息
+ */
 @Getter
 @ToString
 @AllArgsConstructor

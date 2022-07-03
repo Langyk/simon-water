@@ -22,15 +22,15 @@ public class ContentHolderUtil {
     /** 占位符后缀 */
     private static final String PLACE_HOLDER_ENDFIX  = "}";
 
-    private static final StandardEvaluationContext evalutionContext;
+    private static final StandardEvaluationContext EVALUATION_CONTEXT;
 
     private static PropertyPlaceholderHelper propertyPlaceholderHelper = new PropertyPlaceholderHelper(
             PLACE_HOLDER_PREFIX, PLACE_HOLDER_ENDFIX);
 
 
     static {
-        evalutionContext = new StandardEvaluationContext();
-        evalutionContext.addPropertyAccessor(new MapAccessor());
+        EVALUATION_CONTEXT = new StandardEvaluationContext();
+        EVALUATION_CONTEXT.addPropertyAccessor(new MapAccessor());
     }
 
 

@@ -64,7 +64,7 @@ public class SendController {
          */
 
         // 文案参数
-        Map<String, String> variables = new HashMap<>();
+        Map<String, String> variables = new HashMap<>(8);
         variables.put("content", "4567");
         MessageParam messageParam = new MessageParam().setReceiver(phone).setVariables(variables);
         // ID为30001的消息模板

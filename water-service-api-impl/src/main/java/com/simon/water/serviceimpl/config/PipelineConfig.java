@@ -4,8 +4,9 @@ import com.simon.water.pipeline.BusinessProcess;
 import com.simon.water.pipeline.ProcessController;
 import com.simon.water.pipeline.ProcessTemplate;
 import com.simon.water.serviceapi.enums.BusinessCode;
+import com.simon.water.serviceimpl.action.AfterParamCheckAction;
 import com.simon.water.serviceimpl.action.AssembleAction;
-import com.simon.water.serviceimpl.action.PreParamAction;
+import com.simon.water.serviceimpl.action.PreParamCheckAction;
 import com.simon.water.serviceimpl.action.SendMqAction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,24 +18,27 @@ import java.util.Map;
 /**
  * creat by 郎亚坤
  * 2022/7/1 16:47
+ * api层的pipline配置类
  */
 
 @Configuration
 public class PipelineConfig {
     /**
      * 普通发送执行流程
-     * 1. 参数校验
+     * 1. 参数前置校验
      * 2. 组装参数
-     * 3. 发送消息至MQ
+     * 3. 参数后置校验
+     * 4. 发送消息至MQ
      * @return
      */
     @Bean("commonSendTemplate")
     public ProcessTemplate commonSendTemplate(){
         ProcessTemplate processTemplate = new ProcessTemplate();
         ArrayList<BusinessProcess> processList = new ArrayList<>();
-        /** 三个任务处理流程 */
-        processList.add(preParamAction());
+        /** 四个任务处理流程 */
+        processList.add(preParamCheckAction());
         processList.add(assembleAction());
+        processList.add(afterParamCheckAction());
         processList.add(sendMqAction());
 
         processTemplate.setProcessList(processList);
@@ -68,12 +72,21 @@ public class PipelineConfig {
 
 
     /**
-     * 参数校验Action
+     * 参数前置校验Action
      * @return
      */
     @Bean
-    public PreParamAction preParamAction(){
-        return new PreParamAction();
+    public PreParamCheckAction preParamCheckAction(){
+        return new PreParamCheckAction();
+    }
+
+    /**
+     * 参数的后置校验Action
+     * @return
+     */
+    @Bean
+    public AfterParamCheckAction afterParamCheckAction(){
+        return new AfterParamCheckAction();
     }
 
     /**

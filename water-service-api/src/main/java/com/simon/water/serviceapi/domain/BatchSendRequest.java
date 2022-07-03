@@ -23,13 +23,13 @@ public class BatchSendRequest {
 
     /**
      * 消息模板Id
-     * 必傳
+     * 必传
      */
     private Long messageTemplateId;
 
     /**
      * 消息相关参数
-     * 必傳
+     * 必传
      */
     private List<MessageParam> messageParamList;
 

@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
  * 2022/6/20 21:10
  */
 
+/**
+ * 插入模板测试类
+ */
+
 @RestController
 public class MessageTemplateController {
 

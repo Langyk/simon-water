@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+
+/**
+ * 发送的消息类型
+ */
 @Getter
 @ToString
 @AllArgsConstructor

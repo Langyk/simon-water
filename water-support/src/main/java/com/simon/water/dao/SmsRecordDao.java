@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.Mapper;
  * 2022/6/20 20:11
  */
 
-
+/**
+ * 短信记录Dao
+ */
 @Mapper
 public interface SmsRecordDao extends BaseMapper<SmsRecord> {
 }

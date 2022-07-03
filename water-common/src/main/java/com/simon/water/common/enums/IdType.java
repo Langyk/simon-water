@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 发送消息的个人信息
+ * 发送ID类型枚举
  */
 @Getter
 @ToString

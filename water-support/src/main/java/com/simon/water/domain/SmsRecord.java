@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
  * 2022/6/20 20:04
  */
 
+/**
+ * 短信(回执和发送记录)
+ */
 @Data
 @Builder
 @NoArgsConstructor

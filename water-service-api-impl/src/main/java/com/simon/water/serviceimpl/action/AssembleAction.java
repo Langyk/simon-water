@@ -39,12 +39,14 @@ public class AssembleAction implements BusinessProcess {
         SendTaskModel sendTaskModel  = (SendTaskModel) context.getProcessModel();
         Long messageTemplateId = sendTaskModel.getMessageTemplateId();
 
+        /** 1. 判断模板是否存在 */
         try {
             Optional<MessageTemplate> messageTemplate = Optional.ofNullable(messageTemplateDao.selectById(messageTemplateId));
             if(messageTemplate.isEmpty() || messageTemplate.get().getIsDeleted().equals(WaterConstant.TRUE)){
                 context.setNeedBreak(true).setResponse(BasicResultVO.fail(RespStatusEnum.TEMPLATE_NOT_FOUND));
                 return;
             }
+            /** 2. 组装TaskInfo信息 */
             List<TaskInfo> taskInfos = assembleTaskInfo(sendTaskModel, messageTemplate.get());
             sendTaskModel.setTaskInfo(taskInfos);
 
@@ -81,13 +83,16 @@ public class AssembleAction implements BusinessProcess {
     }
 
     /**
-     * 获取contentModel，替换占位符信息
+     * 获取contentModel，替换模板msgContent中占位符信息
      */
     private static ContentModel getContentModelValue(MessageTemplate messageTemplate, MessageParam messageParam){
+        // 获取真正的ContentModel类型
         Integer sendChannel = messageTemplate.getSendChannel();
+        Class contentModelClass = ChannelType.getChanelModelClassByCode(sendChannel);
+
+        //得到模板的msgContent 和 入参
         Map<String, String> variables = messageParam.getVariables();
         JSONObject jsonObject = JSON.parseObject(messageTemplate.getMsgContent());
-        Class contentModelClass = ChannelType.getChanelModelClassByCode(sendChannel);
 
         /**
          * 反射得到不同渠道对应的值
