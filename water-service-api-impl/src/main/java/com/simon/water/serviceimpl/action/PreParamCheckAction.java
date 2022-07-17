@@ -31,13 +31,14 @@ public class PreParamCheckAction implements BusinessProcess {
         SendTaskModel sendTaskModel = (SendTaskModel) context.getProcessModel();
         Long messageTemplateId = sendTaskModel.getMessageTemplateId();
         List<MessageParam> messageParamList = sendTaskModel.getMessageParamList();
+        // 没有传入 消息模板Id 或者 messageParam
         if(messageTemplateId == null || CollUtil.isEmpty(messageParamList)){
             context.setNeedBreak(true).setResponse(BasicResultVO.fail(RespStatusEnum.CLIENT_BAD_PARAMETERS));
             return;
 
         }
 
-        // 过滤接收者为null的messageParam
+        // 过滤receiver=null的messageParam
         List<MessageParam> resultMessageParamList = messageParamList.stream()
                 .filter(messageParam -> !StrUtil.isBlank(messageParam.getReceiver()))
                 .collect(Collectors.toList());

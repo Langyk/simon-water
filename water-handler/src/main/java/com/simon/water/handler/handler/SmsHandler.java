@@ -3,6 +3,7 @@ package com.simon.water.handler.handler;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.simon.water.common.dto.model.SmsContentModel;
+import com.simon.water.common.enums.ChannelType;
 import com.simon.water.handler.domain.SmsParam;
 import com.simon.water.common.domain.TaskInfo;
 import com.simon.water.dao.SmsRecordDao;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 
 @Component
-public class SmsHandler implements Handler {
+public class SmsHandler extends Handler {
 
     @Autowired
     private SmsRecordDao smsRecordDao;
@@ -28,9 +29,13 @@ public class SmsHandler implements Handler {
     @Autowired
     private SmsScript smsScript;
 
+    public SmsHandler() {
+        channelCode = ChannelType.SMS.getCode();
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean doHandler(TaskInfo taskInfo) {
+    public void handler(TaskInfo taskInfo) {
 
         SmsParam smsParam = SmsParam.builder()
                 .phones(taskInfo.getReceiver())
@@ -45,9 +50,7 @@ public class SmsHandler implements Handler {
             recordList.forEach(singleRecord -> {
                 smsRecordDao.insert(singleRecord);
             });
-            return true;
         }
-        return false;
     }
 
     /**
