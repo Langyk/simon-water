@@ -1,7 +1,6 @@
 package com.simon.water.handler.handler;
 
 import com.simon.water.common.domain.TaskInfo;
-import com.simon.water.common.enums.ChannelType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

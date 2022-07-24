@@ -41,7 +41,7 @@ public class TaskInfo {
     private Integer idType;
 
     /**
-     * 发送的Id类型
+     * 发送渠道
      */
     private Integer sendChannel;
 
