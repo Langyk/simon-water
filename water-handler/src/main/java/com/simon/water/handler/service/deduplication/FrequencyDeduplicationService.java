@@ -2,6 +2,7 @@ package com.simon.water.handler.service.deduplication;
 
 import cn.hutool.core.util.StrUtil;
 import com.simon.water.common.domain.TaskInfo;
+import org.springframework.stereotype.Service;
 
 /**
  * creat by 郎亚坤
@@ -9,6 +10,8 @@ import com.simon.water.common.domain.TaskInfo;
  *
  * 频次去重服务
  */
+
+@Service
 public class FrequencyDeduplicationService extends AbstractDeduplicationService{
 
     private static final String PREFIX = "FRE";
