@@ -83,5 +83,24 @@ public class SendController {
         return response;
     }
 
+
+    @GetMapping("/sendEmail")
+    public SendResponse sendEmail(String receiver,Long templateId) {
+
+        // 文案参数
+        Map<String,String> variables = new HashMap<>(8);
+
+        variables.put("contentValue","6666" + System.currentTimeMillis());
+        variables.put("title","yyyy");
+        MessageParam messageParam = new MessageParam().setReceiver(receiver).setVariables(variables);
+        SendRequest sendRequest = new SendRequest().setCode(BusinessCode.COMMON_SEND.getCode())
+                .setMessageTemplateId(templateId)
+                .setMessageParam(messageParam);
+
+        return sendService.send(sendRequest);
+
+
+    }
+
 }
 

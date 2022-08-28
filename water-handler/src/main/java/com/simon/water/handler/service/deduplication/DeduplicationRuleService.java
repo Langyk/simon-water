@@ -7,6 +7,7 @@ import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfig;
 import com.simon.water.common.constant.WaterConstant;
 import com.simon.water.common.domain.TaskInfo;
+import com.simon.water.common.enums.AnchorState;
 import com.simon.water.handler.domain.DeduplicationParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class DeduplicationRuleService {
         DeduplicationParam contentParams = DeduplicationParam.builder()
                 .deduplicationTime(contentDeduplication.getLong(TIME))
                 .countNum(contentDeduplication.getInteger(NUM)).taskInfo(taskInfo)
+                .anchorState(AnchorState.RULE_DEDUPLICATION)
                 .build();
         contentDeduplicationService.deduplication(contentParams);
 
@@ -61,6 +63,7 @@ public class DeduplicationRuleService {
         DeduplicationParam businessParams = DeduplicationParam.builder()
                 .deduplicationTime(seconds)
                 .countNum(frequencyDeduplication.getInteger(NUM)).taskInfo(taskInfo)
+                .anchorState(AnchorState.RULE_DEDUPLICATION)
                 .build();
         frequencyDeduplicationService.deduplication(businessParams);
     }

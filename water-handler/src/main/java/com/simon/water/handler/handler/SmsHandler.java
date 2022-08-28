@@ -2,6 +2,8 @@ package com.simon.water.handler.handler;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Throwables;
 import com.simon.water.common.dto.model.SmsContentModel;
 import com.simon.water.common.enums.ChannelType;
 import com.simon.water.handler.domain.SmsParam;
@@ -9,6 +11,7 @@ import com.simon.water.common.domain.TaskInfo;
 import com.simon.water.dao.SmsRecordDao;
 import com.simon.water.domain.SmsRecord;
 import com.simon.water.handler.script.SmsScript;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ import java.util.List;
  */
 
 @Component
+@Slf4j
 public class SmsHandler extends Handler {
 
     @Autowired
@@ -35,7 +39,7 @@ public class SmsHandler extends Handler {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void handler(TaskInfo taskInfo) {
+    public boolean handler(TaskInfo taskInfo) {
 
         SmsParam smsParam = SmsParam.builder()
                 .phones(taskInfo.getReceiver())
@@ -43,14 +47,19 @@ public class SmsHandler extends Handler {
                 .messageTemplateId(taskInfo.getMessageTemplateId())
                 .supplierId(10) // ChannelType
                 .supplierName("腾讯云通知类消息渠道").build();
-
-        List<SmsRecord> recordList = smsScript.send(smsParam);
-
-        if (CollUtil.isNotEmpty(recordList)) {
-            recordList.forEach(singleRecord -> {
-                smsRecordDao.insert(singleRecord);
-            });
-        }
+       try {
+           List<SmsRecord> recordList = smsScript.send(smsParam);
+           if(!CollUtil.isEmpty(recordList)){
+               recordList.forEach(singleRecord ->{
+                   smsRecordDao.insert(singleRecord);
+               });
+           }
+           return true;
+       }catch (Exception e){
+           log.error("SmsHandler#handler fail:{},params:{}",
+                   Throwables.getStackTraceAsString(e), JSON.toJSONString(smsParam));
+       }
+       return false;
     }
 
     /**

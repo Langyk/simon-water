@@ -23,6 +23,6 @@ public interface SmsScript {
      * @param smsParam 发送短信的参数
      * @return 渠道商接口返回值
      */
-    List<SmsRecord> send(SmsParam smsParam);
+    List<SmsRecord> send(SmsParam smsParam) throws Exception;
 }
 

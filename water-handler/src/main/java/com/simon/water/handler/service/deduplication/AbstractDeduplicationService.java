@@ -7,8 +7,10 @@ package com.simon.water.handler.service.deduplication;
 
 import cn.hutool.core.collection.CollUtil;
 import com.simon.water.common.constant.WaterConstant;
+import com.simon.water.common.domain.AnchorInfo;
 import com.simon.water.common.domain.TaskInfo;
 import com.simon.water.handler.domain.DeduplicationParam;
+import com.simon.water.utils.LogUtils;
 import com.simon.water.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,7 +49,10 @@ public abstract class AbstractDeduplicationService {
         putInRedis(readyPutRedisReceiver, inRedisValue, param);
 
         // 剔除符合去重条件的用户
-        taskInfo.getReceiver().removeAll(filterReceiver);
+        if(CollUtil.isNotEmpty(filterReceiver)){
+            taskInfo.getReceiver().removeAll(filterReceiver);
+            LogUtils.print(AnchorInfo.builder().businessId(taskInfo.getBusinessId()).ids(filterReceiver).state(param.getAnchorState().getCode()).build());
+        }
     }
 
     /**

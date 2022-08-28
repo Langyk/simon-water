@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfig;
 import com.simon.water.common.constant.WaterConstant;
+import com.simon.water.common.domain.AnchorInfo;
 import com.simon.water.common.domain.TaskInfo;
+import com.simon.water.common.enums.AnchorState;
+import com.simon.water.utils.LogUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,6 +36,7 @@ public class DiscardMessageService {
         JSONArray array = JSON.parseArray(config.getProperty(DISCARD_MESSAGE_KEY,
                 WaterConstant.APOLLO_DEFAULT_VALUE_JSON_ARRAY));
         if(array.contains(String.valueOf(taskInfo.getMessageTemplateId()))){
+            LogUtils.print(AnchorInfo.builder().businessId(taskInfo.getBusinessId()).ids(taskInfo.getReceiver()).state(AnchorState.DISCARD.getCode()).build());
             return true;
         }
         return false;

@@ -1,6 +1,9 @@
 package com.simon.water.handler.handler;
 
+import com.simon.water.common.domain.AnchorInfo;
 import com.simon.water.common.domain.TaskInfo;
+import com.simon.water.common.enums.AnchorState;
+import com.simon.water.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -31,8 +34,12 @@ public abstract class Handler{
         handlerHolder.putHandler(channelCode,this);
     }
 
+    // 正常和异常情况下的日志处理
     public void doHandler(TaskInfo taskInfo) {
-        handler(taskInfo);
+        if(!handler(taskInfo)){
+            LogUtils.print(AnchorInfo.builder().state(AnchorState.SEND_FAIL.getCode()).businessId(taskInfo.getBusinessId()).ids(taskInfo.getReceiver()).build());
+        }
+        LogUtils.print(AnchorInfo.builder().state(AnchorState.SEND_SUCCESS.getCode()).businessId(taskInfo.getBusinessId()).ids(taskInfo.getReceiver()).build());
     }
 
     /**
@@ -41,6 +48,6 @@ public abstract class Handler{
      * @param taskInfo
      * @return
      */
-    public abstract void handler(TaskInfo taskInfo);
+    public abstract boolean handler(TaskInfo taskInfo);
 }
 

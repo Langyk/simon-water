@@ -1,6 +1,7 @@
 package com.simon.water.handler.domain;
 
 import com.simon.water.common.domain.TaskInfo;
+import com.simon.water.common.enums.AnchorState;
 import lombok.Builder;
 import lombok.Data;
 
@@ -31,6 +32,11 @@ public class DeduplicationParam {
      * 去重达到的次数
      */
     private Integer countNum;
+
+    /**
+     * 标识属于那种去重
+     */
+    private AnchorState anchorState;
 
 }
 

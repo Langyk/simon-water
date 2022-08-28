@@ -17,8 +17,8 @@ import java.util.Map;
 public class MessageParam {
 
     /**
-     * 接受者，多个用，逗号分开
-     * 必傳
+     * 接收者，多个用，逗号分开
+     * 必传
      */
     private String receiver;
 

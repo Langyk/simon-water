@@ -6,10 +6,14 @@ package com.simon.water.handler.receiver;
  */
 
 import com.alibaba.fastjson.JSON;
+import com.simon.water.common.domain.AnchorInfo;
+import com.simon.water.common.domain.LogParam;
 import com.simon.water.common.domain.TaskInfo;
+import com.simon.water.common.enums.AnchorState;
 import com.simon.water.handler.pending.Task;
 import com.simon.water.handler.pending.TaskPendingHolder;
 import com.simon.water.handler.utils.GroupIdMappingUtils;
+import com.simon.water.utils.LogUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,8 @@ import java.util.Optional;
 
 @Slf4j
 public class Receiver {
+
+    private static final String LOG_BIZ_TYPE = "Receiver#consumer";
 
     @Autowired
     private ApplicationContext context;
@@ -48,6 +54,8 @@ public class Receiver {
              */
             if (topicGroupId.equals(messageGroupId)) {
                 for (TaskInfo taskInfo : TaskInfoLists) {
+                    LogUtils.print(LogParam.builder().bizType(LOG_BIZ_TYPE).object(taskInfo).build(),
+                            AnchorInfo.builder().ids(taskInfo.getReceiver()).businessId(taskInfo.getBusinessId()).state(AnchorState.RECEIVE.getCode()).build());
                     Task task = context.getBean(Task.class).setTaskInfo(taskInfo);
                     taskPendingHolder.route(topicGroupId).execute(task);
                 }
